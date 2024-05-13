@@ -12,8 +12,7 @@ class TestGithubOrgClient(unittest.TestCase):
         ('google',),
         ('abc',)
     ])
-    """@patch('client.GithubOrgClient.get_json')"""
-    @patch('client.get_json')
+    @patch('client.GithubOrgClient.get_json')
     def test_org(self, name, mock_get_json):
         """method to test that
         GithubOrgClient.org returns the correct value"""
@@ -24,7 +23,6 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.assert_called_once_with(url)
         self.assertEqual(result, {'name': name})
 
-    @patch('client.get_json')
     def test_public_repos_url(self):
         """method to unit-test GithubOrgClient._public_repos_url"""
         url_payload = {
@@ -38,3 +36,20 @@ class TestGithubOrgClient(unittest.TestCase):
             result = client._public_repos_url
             url_1 = 'https://api.github.com/orgs/testorg/repos'
             self.assertEqual(result, url_1)
+
+    @patch('client.get_json')
+    def test_public_repos(self, get_json_mock):
+        """method totest public repos"""
+        sam = {"name": "sam", "grade": {"key": "a"}}
+        jack = {"name": "jack", "grade": {"key": "c"}}
+        alex = {"name": "alex", "grade": {"key": "d"}}
+        to_mock = 'client.GithubOrgClient._public_repos_url'
+        get_json_mock.return_value = [sam, jack, alex]
+        with patch(to_mock, PropertyMock(return_value="www.yes.com")) as k:
+            v = GithubOrgClient("v")
+            self.assertEqual(v.public_repos(), ['sam', 'jack', 'alex'])
+            self.assertEqual(v.public_repos("a"), ['sam'])
+            self.assertEqual(v.public_repos("e"), [])
+            self.assertEqual(v.public_repos("30"), [])
+            get_json_mock.assert_called_once_with("www.yes.com")
+            k.assert_called_once_with()
