@@ -7,17 +7,12 @@ from parameterized import parameterized
 
 
 class TestGithubOrgClient(unittest.TestCase):
-    """class that test cases for GithubOrgClien
+    """class that test cases for GithubOrgClien"""
     @parameterized.expand([
         ('google',),
         ('abc',)
     ])
-    @patch('client.GithubOrgClient.get_json')"""
-    @parameterized.expand([
-        ("google", {"google": True}),
-        ("abc", {"abc": True})
-    ])
-    @patch('client.get_json')
+    @patch('client.GithubOrgClient.get_json')
     def test_org(self, name, mock_get_json):
         """method to test that
         GithubOrgClient.org returns the correct value"""
