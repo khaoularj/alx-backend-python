@@ -4,6 +4,7 @@ import unittest
 from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient
 from parameterized import parameterized
+from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -63,3 +64,34 @@ class TestGithubOrgClient(unittest.TestCase):
         key_expected = GithubOrgClient.has_license(
             repo, license_key, expected_res)
         self.assertEqual(key_expected, expected_res)
+
+
+@parameterized_class(
+    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+    TEST_PAYLOAD)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """class that test for github org client """
+    @classmethod
+    def setUpClass(cls):
+        """method to set up test environment"""
+        cls.get_patcher = patch('requests.get')
+        cls.mock_get = cls.get_patcher.start()
+        cls.mock_get.side_effect = [MagicMock(json=lambda: cls.org_payload),
+                                    MagicMock(json=lambda: cls.repos_payload)]
+
+    @classmethod
+    def tearDownClass(cls):
+        """method totest public repos"""
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        """method to test public repos"""
+        client = GithubOrgClient('testorg')
+        repos = client.public_repos()
+        self.assertEqual(repos, self.expected_repos)
+
+    def test_has_license(self):
+        """method to test has license"""
+        client = GithubOrgClient('testorg')
+        has_apache2_license = client.has_license('Apache-2.0')
+        self.assertEqual(has_apache2_license, self.apache2_repos)
