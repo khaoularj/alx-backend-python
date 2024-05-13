@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""unittest"""
+"""unittest module"""
 import unittest
 from unittest.mock import patch, PropertyMock
 from client import GithubOrgClient
@@ -12,7 +12,8 @@ class TestGithubOrgClient(unittest.TestCase):
         ('google',),
         ('abc',)
     ])
-    @patch('client.GithubOrgClient.get_json')
+    """@patch('client.GithubOrgClient.get_json')"""
+    @patch('client.get_json')
     def test_org(self, name, mock_get_json):
         """method to test that
         GithubOrgClient.org returns the correct value"""
@@ -23,6 +24,7 @@ class TestGithubOrgClient(unittest.TestCase):
         mock_get_json.assert_called_once_with(url)
         self.assertEqual(result, {'name': name})
 
+    @patch('client.get_json')
     def test_public_repos_url(self):
         """method to unit-test GithubOrgClient._public_repos_url"""
         url_payload = {
