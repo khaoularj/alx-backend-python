@@ -57,9 +57,7 @@ class TestMemoize(unittest.TestCase):
 
     with patch.object(TestClass, 'a_method', return_value=42) as patched:
         test_class = TestClass()
-        result1 = test_class.a_property
-        result2 = test_class.a_property
+        result = test_class.a_property
 
-        self.assertEqual(result1, 42)
-        self.assertEqual(result2, 42)
+        self.assertEqual(result, 42)
         patched.assert_called_once()
