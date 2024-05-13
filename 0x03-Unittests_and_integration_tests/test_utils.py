@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """unittest"""
 import unittest
-from utils import access_nested_map
+from utils import access_nested_map, get_json
 from parameterized import parameterized
+from unittest.mock import patch, Mock
 
 
 class TestAccessNestedMap(unittest.TestCase):
